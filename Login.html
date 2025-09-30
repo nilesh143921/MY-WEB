@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Login Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem 2rem 2rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            width: 340px;
+            text-align: center;
+            transition: box-shadow 0.3s;
+            animation: fadeInUp 1.2s;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-container:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+        }
+        
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            color: #007bff;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            animation: popTitle 1s;
+        }
+        
+        @keyframes popTitle {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1.08);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .login-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border: 1px solid #007bff33;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 123, 255, 0.07);
+        }
+        
+        .login-container input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+        }
+        
+        .login-container button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+            transition: background 0.2s, transform 0.2s;
+        }
+        
+        .login-container button:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        
+        .message {
+            margin-top: 1.2rem;
+            text-align: center;
+            color: #28a745;
+            font-size: 1.1rem;
+            font-weight: 500;
+            min-height: 1.5em;
+            transition: color 0.2s;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" autocomplete="off">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+    <script>
+        const form = document.getElementById('loginForm');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Simple validation (replace with real authentication in production)
+            if (username === "" || password === "") {
+                messageDiv.textContent = "Please enter both username and password.";
+                messageDiv.className = "message error";
+                return;
+            }
+
+            // Fake user check (for demo)
+            if (username === "admin" && password === "admin123") {
+                messageDiv.textContent = "Login successful! Redirecting...";
+                messageDiv.className = "message success";
+                setTimeout(() => {
+                    window.location.href = "after-login.html";
+                }, 1200);
+            } else {
+                messageDiv.textContent = "Invalid username or password.";
+                messageDiv.className = "message error";
+            }
+        });
+    </script>
+</body>
+
+</html>

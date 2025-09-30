@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem 2rem 2rem 2rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            width: 340px;
+            text-align: center;
+            transition: box-shadow 0.3s;
+            animation: fadeInUp 1.2s;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .register-container h2 {
+            margin-bottom: 1.5rem;
+            color: #007bff;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            animation: popTitle 1s;
+        }
+        
+        @keyframes popTitle {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1.08);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .register-container input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            border: 1px solid #007bff33;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 123, 255, 0.07);
+        }
+        
+        .register-container input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+        }
+        
+        .register-container button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+            transition: background 0.2s, transform 0.2s;
+        }
+        
+        .register-container button:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        
+        .message {
+            margin-top: 1.2rem;
+            text-align: center;
+            color: #28a745;
+            font-size: 1.1rem;
+            font-weight: 500;
+            min-height: 1.5em;
+            transition: color 0.2s;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .login-link {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        .login-link a {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.2s;
+        }
+        
+        .login-link a:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm" autocomplete="off">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <div class="message" id="message"></div>
+        <div class="login-link">
+            Already have an account?
+            <a href="Login.html">Login</a>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById('registerForm');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Basic validation
+            if (!username || !email || !password || !confirmPassword) {
+                messageDiv.textContent = "Please fill in all fields.";
+                messageDiv.className = "message error";
+                return;
+            }
+            if (!validateEmail(email)) {
+                messageDiv.textContent = "Please enter a valid email address.";
+                messageDiv.className = "message error";
+                return;
+            }
+            if (password.length < 6) {
+                messageDiv.textContent = "Password must be at least 6 characters.";
+                messageDiv.className = "message error";
+                return;
+            }
+            if (password !== confirmPassword) {
+                messageDiv.textContent = "Passwords do not match.";
+                messageDiv.className = "message error";
+                return;
+            }
+
+            // Simulate registration success
+            messageDiv.textContent = "Registration successful! Redirecting to login...";
+            messageDiv.className = "message success";
+            setTimeout(() => {
+                window.location.href = "Login.html";
+            }, 1500);
+        });
+
+        function validateEmail(email) {
+            // Simple email regex
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Coding Study Hub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            min-height: 100vh;
+            animation: bgFadeIn 1.5s ease;
+        }
+        
+        @keyframes bgFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        /* Nav Bar */
+        
+        nav {
+            width: 100%;
+            background: #007bff;
+            padding: 0.7rem 0;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.10);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+        
+        nav>div {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        nav span {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 1.5rem;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        
+        nav a:last-child {
+            margin-right: 0;
+        }
+        
+        nav a:hover {
+            color: #e3f2fd;
+            text-decoration: underline;
+        }
+        
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            animation: popupIn 0.8s cubic-bezier(.68, -0.55, .27, 1.55);
+        }
+        
+        @keyframes popupIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .popup-content {
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            text-align: center;
+            max-width: 350px;
+            animation: contentFadeIn 1.2s;
+        }
+        
+        @keyframes contentFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .popup-content h1 {
+            color: #007bff;
+            margin-bottom: 1rem;
+        }
+        
+        .popup-content button {
+            margin-top: 1.5rem;
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+        }
+        
+        .popup-content button:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            transform: scale(1.08);
+        }
+        
+        .store-container {
+            max-width: 900px;
+            margin: 60px auto 30px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+            padding: 2rem;
+            animation: containerFadeIn 1.2s;
+        }
+        
+        @keyframes containerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .store-title {
+            text-align: center;
+            color: #007bff;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            animation: titlePop 1.2s;
+        }
+        
+        @keyframes titlePop {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(1.08);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .topic-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.10);
+            padding: 1.2rem 1rem;
+            text-align: center;
+            transition: box-shadow 0.2s, transform 0.3s;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            animation: cardFadeIn 0.8s forwards;
+        }
+        
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .topic-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 123, 255, 0.18);
+            transform: scale(1.04) translateY(-4px);
+        }
+        
+        .topic-icon {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 0.8rem;
+            animation: iconBounce 1.2s;
+        }
+        
+        @keyframes iconBounce {
+            0% {
+                transform: scale(0.7);
+            }
+            60% {
+                transform: scale(1.15);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .topic-title {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .topic-label {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #0056b3;
+            border-radius: 4px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .topic-desc {
+            color: #333;
+            font-size: 0.95rem;
+            margin-bottom: 0.7rem;
+        }
+        
+        .learn-btn {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+        }
+        
+        .learn-btn:hover {
+            background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div>
+            <span>Coding Study Hub</span>
+            <div>
+                <a href="after-login.html">Home</a>
+                <a href="#topicsGrid">Topics</a>
+                <a href="mailto:codewithjs@gmail.com">Contact</a>
+            </div>
+        </div>
+    </nav>
+    <div class="popup" id="welcomePopup">
+        <div class="popup-content">
+            <h1>Welcome!</h1>
+            <p>You have successfully logged in.<br>Explore coding topics and start learning!</p>
+            <button onclick="closePopup()">Continue</button>
+        </div>
+    </div>
+    <div class="store-container">
+        <div class="store-title">Study of Coding</div>
+        <div class="topics-grid" id="topicsGrid">
+            <!-- Coding topics will be dynamically loaded here -->
+        </div>
+        <div class="extra-notes" style="margin-top:2.5rem; background:#e3f2fd; border-radius:10px; padding:1.2rem 1.5rem; box-shadow:0 2px 8px rgba(0,123,255,0.10);">
+            <h3 style="color:#007bff; margin-top:0;">Extra Notes</h3>
+            <ul style="color:#333; font-size:1rem; padding-left:1.2em;">
+                <li>Click <b>Learn More</b> on any topic to access free tutorials and resources.</li>
+                <li>All icons are for visual reference only and link to official or trusted learning sites.</li>
+                <li>Use the <b>Continue</b> button above to close the welcome popup and start exploring.</li>
+                <li>For best experience, use a modern browser and stable internet connection.</li>
+                <li>If you find a broken link or missing image, please refresh or contact the site admin.</li>
+                <li>Contact us: <a href="mailto:codewithjs@gmail.com" style="color:#007bff;text-decoration:underline;">codewithjs@gmail.com</a></li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        function closePopup() {
+            document.getElementById('welcomePopup').style.display = 'none';
+        }
+
+        // Coding topics data
+        const topics = [{
+            title: "Python Programming",
+            label: "Beginner",
+            desc: "Learn Python basics, syntax, and applications.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+            link: "https://www.learnpython.org/"
+        }, {
+            title: "Web Development",
+            label: "Frontend",
+            desc: "HTML, CSS, JavaScript, and modern frameworks.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+            link: "https://www.freecodecamp.org/learn/"
+        }, {
+            title: "Java Programming",
+            label: "Object-Oriented",
+            desc: "Master Java for desktop, web, and Android.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+            link: "https://www.javatpoint.com/java-tutorial"
+        }, {
+            title: "C++ Programming",
+            label: "Core CS",
+            desc: "Learn C++ for system/software development.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
+            link: "https://www.learncpp.com/"
+        }, {
+            title: "JavaScript",
+            label: "Frontend",
+            desc: "Learn JavaScript for web development.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+            link: "https://javascript.info/"
+        }, {
+            title: "C# Programming",
+            label: "Object-Oriented",
+            desc: "Learn C# for desktop and game development.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+            link: "https://www.learncs.org/"
+        }, {
+            title: "PHP",
+            label: "Backend",
+            desc: "Learn PHP for server-side scripting.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg",
+            link: "https://www.php.net/manual/en/tutorial.php"
+        }, {
+            title: "Go (Golang)",
+            label: "Backend",
+            desc: "Learn Go for scalable backend systems.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
+            link: "https://tour.golang.org/welcome/1"
+        }, {
+            title: "Swift",
+            label: "Mobile",
+            desc: "Learn Swift for iOS app development.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+            link: "https://www.swift.org/documentation/"
+        }, {
+            title: "Kotlin",
+            label: "Mobile",
+            desc: "Learn Kotlin for Android development.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+            link: "https://kotlinlang.org/docs/home.html"
+        }, {
+            title: "Ruby",
+            label: "Backend",
+            desc: "Learn Ruby for web and scripting.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg",
+            link: "https://www.ruby-lang.org/en/documentation/quickstart/"
+        }, {
+            title: "Data Structures",
+            label: "Core CS",
+            desc: "Understand arrays, lists, trees, graphs, and more.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg",
+            link: "https://www.geeksforgeeks.org/data-structures/"
+        }, {
+            title: "Machine Learning",
+            label: "AI",
+            desc: "Explore ML algorithms and real-world projects.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg",
+            link: "https://www.coursera.org/learn/machine-learning"
+        }, {
+            title: "React JS",
+            label: "Frontend",
+            desc: "Build interactive UIs with React.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+            link: "https://react.dev/learn"
+        }, {
+            title: "Node.js",
+            label: "Backend",
+            desc: "Create scalable backend apps with Node.js.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+            link: "https://nodejs.dev/en/learn/"
+        }, {
+            title: "SQL & Databases",
+            label: "Database",
+            desc: "Learn SQL and relational database concepts.",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+            link: "https://www.w3schools.com/sql/"
+        }];
+
+        // Animate topic cards in sequence
+        const topicsGrid = document.getElementById('topicsGrid');
+        topics.forEach((topic, i) => {
+            const card = document.createElement('div');
+            card.className = 'topic-card';
+            card.style.animationDelay = `${0.15 * i + 0.2}s`;
+            card.innerHTML = `
+                <img class="topic-icon" src="${topic.icon}" alt="Topic Icon" onerror="this.src='https://via.placeholder.com/60?text=No+Image';">
+                <div class="topic-title">${topic.title}</div>
+                <div class="topic-label">${topic.label}</div>
+                <div class="topic-desc">${topic.desc}</div>
+                <a class="learn-btn" href="${topic.link}" target="_blank">Learn More</a>
+            `;
+            topicsGrid.appendChild(card);
+        });
+    </script>
+</body>
+
+</html>
