@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>codewithnitu - Developer Portfolio</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for aesthetic components -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script type="module">
+        // Global Tailwind configuration (retained for color customization)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#10B981', /* Emerald Green */
+                        'secondary': '#06B6D4', /* Cyan */
+                        'background': '#0F172A',
+                        'card': '#1E293B',
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Handles the contact form submission using client-side logic only.
+         * Data is logged to the console to simulate a "live" capture.
+         */
+        window.submitContactForm = function(event) {
+            event.preventDefault(); // Stop default form submission
+            const form = document.getElementById('contact-form');
+            const messageDiv = document.getElementById('contact-message');
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            // Start processing state
+            submitButton.disabled = true;
+            submitButton.innerHTML = 'Processing...';
+            messageDiv.innerHTML = '';
+
+            try {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const message = document.getElementById('message').value.trim();
+
+                if (!name || !email || !message) {
+                    messageDiv.innerHTML = '<p class="text-yellow-400">Please fill out all fields.</p>';
+                    return;
+                }
+
+                // Simulate "live" data capture by logging to the console
+                console.groupCollapsed('New Contact Form Submission');
+                console.log('Timestamp:', new Date().toLocaleString());
+                console.log('Name:', name);
+                console.log('Email:', email);
+                console.log('Message:', message);
+                console.groupEnd();
+
+
+                // Display success message after a brief delay for realism
+                setTimeout(() => {
+                    messageDiv.innerHTML = '<p class="text-primary font-bold">Message Sent! (Details logged to console)</p>';
+                    form.reset(); // Clear the form
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = 'Send Message';
+                }, 500); 
+                
+            } catch (e) {
+                console.error("Client-side error during form submission: ", e);
+                messageDiv.innerHTML = '<p class="text-red-400">An error occurred while processing your message locally.</p>';
+                submitButton.disabled = false;
+                submitButton.innerHTML = 'Send Message';
+            }
+        }
+
+
+        // --- Live Star Field / Background Logic (retained) ---
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let stars = [];
+        const numStars = 100;
+
+        function setCanvasSize() {
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        }
+
+        class Star {
+            constructor() {
+                this.reset();
+                this.speed = this.size * 0.7 + Math.random() * 0.8; 
+            }
+            
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height; 
+                this.size = Math.random() * 2 + 0.5; 
+                this.alpha = 0.5 + Math.random() * 0.5;
+                this.velocity = { x: (Math.random() - 0.5) * 0.5, y: 1 }; 
+            }
+
+            update() {
+                this.x += this.velocity.x * this.speed;
+                this.y += this.velocity.y * this.speed;
+                
+                if (this.y > canvas.height + this.size) {
+                    this.reset();
+                    this.y = -this.size;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initStars() {
+            if (!ctx) return;
+            setCanvasSize();
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function animateStars() {
+            if (!ctx) return;
+            
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animateStars);
+        }
+        
+        // --- Document Initialization and Event Handlers ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
+            // Simple logic for mobile navigation toggle
+            const menuButton = document.getElementById('menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (menuButton && mobileMenu) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Close mobile menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Initialize and start the live background
+            if (canvas && ctx) {
+                initStars();
+                animateStars();
+                window.addEventListener('resize', initStars);
+            }
+        });
+    </script>
+
+    <style>
+        /* Apply Inter font family and a dark background globally */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Dark Blue/Slate */
+            color: #E2E8F0; /* Light Gray text */
+            scroll-behavior: smooth;
+        }
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #10B981; /* Emerald green accent */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+        /* Style for interactive elements on hover */
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .project-card:hover .project-title {
+            color: #34D399; /* Brighter green on hover */
+        }
+        /* Style for the live animated background canvas */
+        #starCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; /* Place behind all content */
+            pointer-events: none; /* Allows clicks to pass through */
+        }
+        
+        /* Custom utility for the timeline effect */
+        .timeline-item {
+            position: relative;
+            padding-left: 1.5rem; /* Space for the dot and line */
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0.5rem;
+            width: 2px;
+            height: 100%;
+            background-color: #334155; /* Slate-700 */
+        }
+        .timeline-item:last-child::before {
+            height: calc(100% - 1.5rem); /* Stop the line just before the end for aesthetic */
+        }
+        .timeline-dot {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: #10B981; /* Primary color */
+            border: 2px solid #0F172A; /* Match body background */
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Live Star Background Canvas (Always first in body, visually last via z-index) -->
+    <canvas id="starCanvas"></canvas>
+
+    <!-- Header/Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-background/95 backdrop-blur-sm shadow-lg border-b border-card">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <!-- Logo/Channel Name -->
+            <a href="#hero" class="text-2xl font-extrabold text-primary tracking-wider transition-colors duration-300 hover:text-secondary">
+                &lt;Nilesh/&gt;
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8 items-center text-lg">
+                <a href="#about" class="text-slate-300 hover:text-primary transition-colors">About</a>
+                <a href="#skills" class="text-slate-300 hover:text-primary transition-colors">Skills</a>
+                <a href="#experience" class="text-slate-300 hover:text-primary transition-colors">Experience</a>
+                <a href="#projects" class="text-slate-300 hover:text-primary transition-colors">Projects</a>
+                <a href="#contact" class="text-slate-300 hover:text-primary transition-colors">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-button" class="md:hidden text-slate-300 p-2 rounded-lg hover:bg-card transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu (Hidden by Default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-card border-t border-slate-700">
+            <nav class="flex flex-col space-y-2 p-4 text-center">
+                <a href="#about" class="block py-2 text-slate-300 hover:text-primary hover:bg-slate-700 rounded-md transition-colors">About</a>
+                <a href="#skills" class="block py-2 text-slate-300 hover:text-primary hover:bg-slate-700 rounded-md transition-colors">Skills</a>
+                <a href="#experience" class="block py-2 text-slate-300 hover:text-primary hover:bg-slate-700 rounded-md transition-colors">Experience</a>
+                <a href="#projects" class="block py-2 text-slate-300 hover:text-primary hover:bg-slate-700 rounded-md transition-colors">Projects</a>
+                <a href="#contact" class="block py-2 text-slate-300 hover:text-primary hover:bg-slate-700 rounded-md transition-colors">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- 1. Hero Section -->
+        <section id="hero" class="pt-24 pb-20 md:pt-32 md:pb-28 flex flex-col lg:flex-row items-center justify-between text-center lg:text-left min-h-[80vh]">
+            <div class="lg:w-3/5">
+                <p class="text-xl sm:text-2xl text-secondary font-medium mb-3">Hello, I'm Nilesh khant</p>
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
+                    Full-Stack Developer <br class="hidden sm:inline" />With a focus on <span class="text-primary transition-colors duration-500 hover:text-cyan-400">Scalable UIs</span>.
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl lg:mx-0 mx-auto">
+                    I translate complex designs into high-performance, maintainable web applications using **React, TypeScript, and modern API integration**.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="#projects" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-background bg-primary hover:bg-green-400 transition-all duration-300 transform hover-lift">
+                        View Projects
+                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+                    </a>
+                    <a href="#contact" class="inline-flex items-center justify-center px-8 py-3 border border-primary text-base font-medium rounded-full text-primary hover:bg-primary/10 transition-all duration-300 transform hover-lift">
+                        Get in Touch
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Placeholder for developer image/illustration -->
+            <div class="lg:w-2/5 mt-12 lg:mt-0 p-6">
+                <div class="bg-card p-8 rounded-xl shadow-2xl border border-slate-700">
+                    <!-- Using a simple code block graphic to represent a developer -->
+                    <i data-lucide="code" class="w-24 h-24 text-primary mx-auto mb-4"></i>
+                    <p class="text-slate-300 font-mono text-sm">
+                        <span class="text-secondary">import</span> { useState } <span class="text-secondary">from</span> 'react';<br>
+                        <span class="text-primary">function</span> App() {<br>
+                        &nbsp;&nbsp;<span class="text-secondary">const</span> [data] = useState('loaded');<br>
+                        &nbsp;&nbsp;<span class="text-primary">return</span> &lt;h1&gt;{data} Portfolio&lt;/h1&gt;;<br>
+                        }
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Line -->
+        <div class="w-full h-px bg-slate-700 my-8"></div>
+
+        <!-- 2. About Section -->
+        <section id="about" class="py-16 md:py-24">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+                About <span class="text-secondary">My Work</span>
+            </h2>
+            <div class="bg-card p-6 sm:p-10 rounded-xl shadow-2xl border border-slate-700 max-w-4xl mx-auto">
+                <p class="text-lg text-slate-300 mb-4">
+                    My professional focus is on **building and optimizing high-traffic web applications**. I bridge the gap between complex backend systems and delightful user experiences. I specialize in the modern JavaScript ecosystem, prioritizing code quality, performance metrics (Lighthouse/Web Vitals), and advanced state management patterns.
+                </p>
+                <p class="text-lg text-slate-300 mb-4">
+                    I have deep expertise in **TypeScript**, ensuring type safety across large codebases, and leverage **Node.js** for effective backend development and serverless architecture integration. My passion is writing clean, tested, and reliable code that contributes directly to business goals and a superior user experience.
+                </p>
+                <p class="text-lg text-slate-300">
+                    Let's collaborate on the next generation of web platforms!
+                </p>
+            </div>
+        </section>
+
+        <!-- Separator Line -->
+        <div class="w-full h-px bg-slate-700 my-8"></div>
+
+        <!-- 3. Skills Section (Expanded) -->
+        <section id="skills" class="py-16 md:py-24">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+                Professional <span class="text-primary">Toolbox</span>
+            </h2>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
+                
+                <!-- Skill Card 1: React -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="blocks" class="w-10 h-10 text-cyan-500 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">React</h3>
+                    <p class="text-sm text-slate-400">Component-Based UI</p>
+                </div>
+
+                <!-- Skill Card 2: TypeScript -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="type" class="w-10 h-10 text-blue-500 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">TypeScript</h3>
+                    <p class="text-sm text-slate-400">Type Safety</p>
+                </div>
+
+                <!-- Skill Card 3: JavaScript -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="zap" class="w-10 h-10 text-yellow-500 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">JavaScript</h3>
+                    <p class="text-sm text-slate-400">ES6+</p>
+                </div>
+                
+                <!-- Skill Card 4: Node.js -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="server" class="w-10 h-10 text-green-500 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">Node.js</h3>
+                    <p class="text-sm text-slate-400">Backend/APIs</p>
+                </div>
+                
+                <!-- Skill Card 5: Tailwind CSS -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="feather" class="w-10 h-10 text-cyan-400 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">Tailwind CSS</h3>
+                    <p class="text-sm text-slate-400">Utility-First</p>
+                </div>
+
+                <!-- Skill Card 6: Git & GitHub -->
+                <div class="skill-card bg-card p-6 rounded-xl text-center border border-slate-700 transition duration-300 hover:border-primary hover-lift">
+                    <i data-lucide="git-branch" class="w-10 h-10 text-red-500 mx-auto mb-3"></i>
+                    <h3 class="text-xl font-semibold">Git</h3>
+                    <p class="text-sm text-slate-400">Version Control</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Line -->
+        <div class="w-full h-px bg-slate-700 my-8"></div>
+        
+        <!-- 4. Experience Section (NEW) -->
+        <section id="experience" class="py-16 md:py-24">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+                Work <span class="text-secondary">History</span>
+            </h2>
+            
+            <div class="max-w-4xl mx-auto space-y-12">
+
+                <!-- Experience Item 1: Senior Frontend Developer -->
+                <div class="timeline-item bg-card p-6 rounded-xl shadow-xl border border-slate-700">
+                    <div class="timeline-dot"></div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                        <h3 class="text-2xl font-bold text-primary">Senior Frontend Developer</h3>
+                        <span class="text-sm font-medium text-slate-400 mt-1 sm:mt-0">2022 - Present</span>
+                    </div>
+                    <p class="text-lg text-slate-200 mb-3">Tech Innovators Inc. | San Francisco, CA</p>
+                    <ul class="list-disc list-outside space-y-2 pl-5 text-slate-300">
+                        <li>Led the migration of a legacy AngularJS application to **React** and **TypeScript**, reducing critical bugs by 40%.</li>
+                        <li>Implemented robust **global state management** (Zustand) for real-time dashboard data.</li>
+                        <li>Mentored junior developers on best practices for **responsive design** and component architecture.</li>
+                    </ul>
+                </div>
+
+                <!-- Experience Item 2: UI/UX Specialist -->
+                <div class="timeline-item bg-card p-6 rounded-xl shadow-xl border border-slate-700">
+                    <div class="timeline-dot"></div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+                        <h3 class="text-2xl font-bold text-primary">UI/UX Specialist</h3>
+                        <span class="text-sm font-medium text-slate-400 mt-1 sm:mt-0">2019 - 2022</span>
+                    </div>
+                    <p class="text-lg text-slate-200 mb-3">Digital Solutions Co. | Remote</p>
+                    <ul class="list-disc list-outside space-y-2 pl-5 text-slate-300">
+                        <li>Designed and developed over 15 responsive marketing websites using modern **HTML5, CSS3, and Tailwind CSS**.</li>
+                        <li>Optimized website performance, achieving consistent **Lighthouse scores above 95** for performance and accessibility.</li>
+                        <li>Collaborated directly with design teams to ensure pixel-perfect fidelity across all major browsers.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- Separator Line -->
+        <div class="w-full h-px bg-slate-700 my-8"></div>
+
+        <!-- 5. Projects Section (Enhanced) -->
+        <section id="projects" class="py-16 md:py-24">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-16">
+                Featured <span class="text-secondary">Projects</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+                
+                <!-- Project Card 1: Enterprise Dashboard -->
+                <div class="project-card bg-card p-6 rounded-xl shadow-xl border border-slate-700 transition duration-300 hover:border-primary transform hover-lift">
+                    <div class="mb-4">
+                        <i data-lucide="layout-dashboard" class="w-8 h-8 text-secondary"></i>
+                    </div>
+                    <h3 class="project-title text-2xl font-bold mb-3 text-slate-100 transition-colors duration-300">
+                        Enterprise Data Dashboard
+                    </h3>
+                    <p class="text-slate-400 mb-4">
+                        A real-time data visualization tool built with **React** for complex reporting. Features dynamic charting, lazy-loading components, and strict **TypeScript** definitions for data integrity.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs font-medium bg-cyan-900/50 text-cyan-300 px-3 py-1 rounded-full">React</span>
+                        <span class="text-xs font-medium bg-blue-900/50 text-blue-300 px-3 py-1 rounded-full">TypeScript</span>
+                        <span class="text-xs font-medium bg-primary/20 text-primary px-3 py-1 rounded-full">State Management</span>
+                    </div>
+                    <a href="#" class="inline-flex items-center text-primary font-semibold hover:text-green-400 transition-colors">
+                        View Demo 
+                        <i data-lucide="external-link" class="w-4 h-4 ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Project Card 2: Full-Stack API Service -->
+                <div class="project-card bg-card p-6 rounded-xl shadow-xl border border-slate-700 transition duration-300 hover:border-primary transform hover-lift">
+                    <div class="mb-4">
+                        <i data-lucide="server-cog" class="w-8 h-8 text-primary"></i>
+                    </div>
+                    <h3 class="project-title text-2xl font-bold mb-3 text-slate-100 transition-colors duration-300">
+                        GraphQL API & Service Layer
+                    </h3>
+                    <p class="text-slate-400 mb-4">
+                        A backend service utilizing **Node.js** and **Express** for a unified data layer. Includes JWT authentication, database modeling, and unit testing for high reliability.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="text-xs font-medium bg-green-900/50 text-green-300 px-3 py-1 rounded-full">Node.js</span>
+                        <span class="text-xs font-medium bg-red-900/50 text-red-300 px-3 py-1 rounded-full">Express/API</span>
+                        <span class="text-xs font-medium bg-yellow-900/50 text-yellow-300 px-3 py-1 rounded-full">Authentication</span>
+                    </div>
+                    <a href="#" class="inline-flex items-center text-primary font-semibold hover:text-green-400 transition-colors">
+                        View Code
+                        <i data-lucide="github" class="w-4 h-4 ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Separator Line -->
+        <div class="w-full h-px bg-slate-700 my-8"></div>
+        
+        <!-- 6. Contact Section -->
+        <section id="contact" class="py-16 md:py-24">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-12">
+                Let's <span class="text-primary">Connect</span>
+            </h2>
+            
+            <div class="max-w-xl mx-auto bg-card p-6 sm:p-10 rounded-xl shadow-2xl border border-slate-700">
+                <p class="text-lg text-slate-300 text-center mb-6">
+                    If you have a project, a question, or just want to say hello, feel free to reach out. I'm always looking for exciting design challenges!
+                </p>
+
+                <!-- Client-Side Processed Contact Form -->
+                <form id="contact-form" class="space-y-4" onsubmit="submitContactForm(event)">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-slate-300 mb-1">Your Name</label>
+                        <input type="text" id="name" name="name" placeholder="Jane Doe" required
+                               class="w-full px-4 py-2 bg-background border border-slate-600 rounded-lg focus:ring-primary focus:border-primary text-white transition-colors">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required
+                               class="w-full px-4 py-2 bg-background border border-slate-600 rounded-lg focus:ring-primary focus:border-primary text-white transition-colors">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-slate-300 mb-1">Message</label>
+                        <textarea id="message" name="message" rows="4" placeholder="I'd love to chat about..." required
+                                  class="w-full px-4 py-2 bg-background border border-slate-600 rounded-lg focus:ring-primary focus:border-primary text-white transition-colors"></textarea>
+                    </div>
+
+                    <!-- Message container for success/error messages -->
+                    <div id="contact-message" class="h-6 text-center text-sm"></div>
+
+                    <button type="submit" class="w-full px-4 py-3 bg-secondary text-background font-bold rounded-full text-lg hover:bg-cyan-400 transition-all duration-300 transform hover-lift">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card mt-16 border-t border-slate-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                    <i data-lucide="github" class="w-6 h-6"></i>
+                </a>
+                <a href="#" class="text-slate-400 hover:text-primary transition-colors">
+                    <i data-lucide="linkedin" class="w-6 h-6"></i>
+                </a>
+                <a href="https://youtube.com/codewithnitu" target="_blank" class="text-slate-400 hover:text-primary transition-colors">
+                    <i data-lucide="youtube" class="w-6 h-6"></i>
+                </a>
+            </div>
+            <p class="text-sm text-slate-500">
+                &copy; 2024 codewithnitu. All rights reserved.
+                <span class="hidden sm:inline">|</span> Crafted with HTML, Tailwind CSS, and JavaScript.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
